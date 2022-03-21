@@ -1,0 +1,146 @@
+					NAME: Kevin Christie Dsa                   CWID: 
+20009000
+
+?***************************************************************?
+
+Query 1 :
+with d1 as (
+	select cust, min(quant) as MIN_Q, max(quant) as MAX_Q, avg(quant) as AVG_Q
+	from sales
+	group by cust),
+
+d2 as(
+	select d1.cust as cust,d1.MIN_Q, s.prod as MIN_PROD, s.date as MIN_DATE, s.state as ST
+	from d1, sales s
+	where d1.cust=s.cust and d1.MIN_Q=s.quant),
+d3 As ( 
+  SELECT d1.cust as cust , d1.MAX_Q, z.prod AS Max_Prod, z.date AS MAX_DATE, z.state AS ST
+  from d1, sales z 
+  where d1.cust=z.cust and d1.MAX_Q=z.quant)
+ 
+
+   
+SELECT d1.cust AS CUSTOMER, d1.MIN_Q as MIN_Q, d2.MIN_PROD AS MIN_PROD, d2.MIN_DATE as MIN_DATE, d2.ST AS ST, d3.MAX_Q as MAX_Q, d3.MAX_PROD AS MAX_PROD, d3.MAX_DATE as MAX_DATE, d2.ST AS ST, d1.AVG_Q AS AVG_Q
+FROM d1
+join d2 on d1.cust = d2.cust AND d1.MIN_Q = d2.MIN_Q
+join d3 On d1.cust = d3.cust AND d1.MAX_Q = d3.MAX_Q;
+
+
+
+Query 2 Solved by Bhaiya:
+with cte1 as (
+SELECT year, month, day, sum(quant) as quantity from 
+sales
+group by 1,2,3
+order by 1,2,3),
+cte2 as (
+select year, month,  min(quantity) as min_quant, max(quantity) as max_quant
+from cte1
+group by 1,2),
+cte3 as (
+select c2.year, c2.month, c1.day, c2.min_quant
+from cte2 c2 inner join cte1 c1 on (c2.year = c1.year and c2.month = c1.month and c2.min_quant = c1.quantity) ),
+cte4 as (
+select c2.year, c2.month, c1.day, c2.max_quant
+from cte2 c2 inner join cte1 c1 on (c2.year = c1.year and c2.month = c1.month and c2.max_quant = c1.quantity) )
+
+select c3.year as year, c3.month as month, c3.day as slowest_day, c3.min_quant as slowest_day_q, c4.day as busiest_day, c4.max_quant as busiest_day_q
+from cte3 c3 inner join cte4 c4 on (c3.year = c4.year and c3.month = c4.month)
+
+
+query 3 cross check validate data:
+
+
+with c1 as (select cust, month, prod, sum(quant)as quant from sales 
+group by 1,2,3
+order by 1,2,3),
+
+c2 as (select cust, month, max(quant) as MAX_Q, min(quant) as MIN_Q
+from c1
+group by 1,2),
+
+c3 as (select c2.cust , c2.month, c2.MAX_Q , c1.prod as MOST_FAV_PROD
+from c2
+INNER join c1 on c1.cust = c2.cust and c1.month = c2.month and c1.quant = c2.MAX_Q),
+
+c4 as(select c2.cust , c2.month, c2.MIN_Q , c1.prod as LEAST_FAV_PROD
+from c2
+INNER join c1 on c1.cust = c2.cust and c1.month = c2.month and c1.quant = c2.MIN_Q)
+
+SELECT c3.cust as CUSTOMER, c3.month as MONTH , c3.MOST_FAV_PROD ,c4.LEAST_FAV_PROD
+from c3
+inner join c4 on c4.cust = c3.cust and c4.month = c3.month
+
+
+
+
+
+Query 4 from git hub :
+
+
+with 
+
+t1 as
+(select cust,prod, avg(quant), count(quant),sum(quant) from sales group by cust,prod),
+
+t2 as
+(select cust, prod ,avg(quant) as q1_avg from sales where month between 1 and 3 group by cust,prod),
+
+t3 as
+(select cust, prod ,avg(quant) as q2_avg from sales where month between 4 and 6 group by cust,prod),
+
+t4 as
+(select cust, prod ,avg(quant) as q3_avg from sales where month between 7 and 9 group by cust,prod),
+
+t5 as
+(select cust, prod ,avg(quant) as q4_avg from sales where month between 10 and 12 group by cust,prod)
+
+
+
+select t1.cust,t1.prod,t2.q1_avg,t3.q2_avg,t4.q3_avg,t5.q4_avg,t1.avg,t1.sum as total,t1.count from t1 left join t2 on t2.cust=t1.cust and t2.prod=t1.prod
+left join t3 on t3.cust=t1.cust and t3.prod=t1.prod
+left join t4 on t4.cust=t1.cust and t4.prod=t1.prod
+left join t5 on t5.cust=t1.cust and t5.prod=t1.prod
+
+
+
+~~~~~~~~~~~ query 5 done
+
+with 
+t1 as 
+(select prod , month,date, MAX(quant) as max_all from sales group by 1,2,3 order by 1,2),
+
+t1a1 as 
+(select prod ,  MAX(max_all) as q1_MAX from t1 where month between 1 and 3 group by prod order by 1),
+
+a1 as (
+select t1a1.prod, t1a1.q1_MAX , t1.date as q1_date from t1a1 join t1 on t1.prod = t1a1.prod and t1.max_all = t1a1.q1_MAX
+where t1.month between 1 and 3),
+
+t1a2 as 
+(select prod ,  MAX(max_all) as q2_MAX from t1 where month between 4 and 6 group by prod order by 1),
+
+a2 as (
+select t1a2.prod, t1a2.q2_MAX , t1.date as q2_date from t1a2 join t1 on t1.prod = t1a2.prod and t1.max_all = t1a2.q2_MAX
+where t1.month between 4 and 6),
+
+t1a3 as 
+(select prod ,  MAX(max_all) as q3_MAX from t1 where month between 7 and 9 group by prod order by 1),
+
+a3 as (
+select t1a3.prod, t1a3.q3_MAX , t1.date as q3_date from t1a3 join t1 on t1.prod = t1a3.prod and t1.max_all = t1a3.q3_MAX
+where t1.month between 7 and 9),
+
+t1a4 as 
+(select prod ,  MAX(max_all) as q4_MAX from t1 where month between 10 and 12 group by prod order by 1),
+
+a4 as (
+select t1a4.prod, t1a4.q4_MAX , t1.date as q4_date from t1a4 join t1 on t1.prod = t1a4.prod and t1.max_all = t1a4.q4_MAX
+where t1.month between 10 and 12)
+--select * from a4
+select a1.prod, a1.q1_MAX , a1.q1_date, a2.q2_MAX , a2.q2_date,a3.q3_MAX , a3.q3_date,a4.q4_MAX , a4.q4_date
+from a1
+left join a2 on a1.prod = a2.prod
+left join a3 on a1.prod = a3.prod
+left join a4 on a1.prod = a4.prod
+
