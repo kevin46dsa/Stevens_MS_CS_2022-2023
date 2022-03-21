@@ -1,0 +1,15 @@
+{
+  "name": "web-programming-lab-4",
+  "version": "1.0.0",
+  "description": "Lab Module 4",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Kevin Christie Dsa 20009000",
+  "license": "ISC",
+  "dependencies": {
+    "mongodb": "^4.3.1"
+  }
+}
