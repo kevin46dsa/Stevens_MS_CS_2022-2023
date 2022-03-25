@@ -5,12 +5,12 @@ const static = express.static(__dirname + "/public");
 const configRoutes = require("./routes");
 const exphbs = require("express-handlebars");
 
-app.use("/public", static);
+  
 //app.use(bodyParser.json());
 //app.use(bodyParser.urlencoded());
 app.use(express.urlencoded({extended: true}));
 
-app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.engine("handlebars", exphbs.engine({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
 configRoutes(app);
