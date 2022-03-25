@@ -1,19 +1,15 @@
 {
-  "name": "lab_8",
+  "name": "lab_9",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "seed": "node ./tasks/seed.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Kevin Dsa CWID 20009000",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.26.1",
     "express": "^4.17.3",
     "express-handlebars": "^6.0.3"
-    
   }
 }

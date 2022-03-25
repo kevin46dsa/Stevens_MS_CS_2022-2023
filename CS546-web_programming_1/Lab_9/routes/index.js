@@ -1,9 +1,11 @@
-const ApiRoutes = require("./tvmazeapi");
+const Routes = require("./staticroute");
 
 
 const constructorMethod = app => {
   
-  app.use("/", ApiRoutes);
+  app.use("/", (req, res) => {
+    res.render("prime/static", {});
+  });
   
   app.use("*", (req, res) => {
     res.sendStatus(404);
