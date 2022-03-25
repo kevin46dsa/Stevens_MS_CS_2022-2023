@@ -23,7 +23,7 @@ async function getShowById(id){
 
 	//add data validation
 	let { data } = await axios.get(
-		`http://localhost:3000/show/${id}`
+		`https://api.tvmaze.com/shows/${id}`
 	);
 
 	return data

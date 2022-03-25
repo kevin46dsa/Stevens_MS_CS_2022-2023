@@ -1,13 +1,50 @@
 <article>
-    <h1>Show Name here</h1>
-    <img> add show image here  src is the value in show
+{{#if data.name}}
+<h1>{{data.name}}</h1>
+{{else}}
+<h1>N/A</h1>
+{{/if}}
+{{#if data.image.medium}} //figure this out for broken images
+    <img alt= {{data.name}}src={{data.image.medium}}/>
+ {{else}}
+    <img alt= {{data.name}}src={{data.image.medium}}/>
+  {{/if}}  
     <dl>
-        add language
-        genre in a <ul></ul>
-        rating avg
-        network Name
-        summary
-        
-    </dl>
-
-</article>
+      <dt>Language</dt>
+      {{#if data.language}}
+      <dd>{{data.language}}</dd>
+      {{else}}
+      <dd>N/A</dd>
+      {{/if}}
+      <dt>Genres</dt>
+      <dd>
+        <ul>
+        {{#if data.genres}}
+        {{#each data.genres}}
+          <li>{{this}}</li>
+        {{/each}} 
+        {{else}}
+        <li>N/A</li>
+        {{/if}}
+        </ul>
+      </dd>
+    <dt>Average Rating</dt>
+    {{#if data.rating.average}}
+    <dd>{{data.rating.average}}</dd>
+    {{else}}
+    <dd>N/A</dd>
+    {{/if}}
+    <dt>Network</dt>
+    {{#if data.network.name}}
+    <dd>{{data.network.name}}</dd>
+    {{else}}
+    <dd>N/A</dd>
+    {{/if}}
+    <dt>Summary</dt>
+    {{#if data.summary}}
+    <dd>{{{data.summary}}}</dd>
+    {{else}}
+    <dd>N/A</dd>
+    {{/if}}
+  </dl>
+  </article>
