@@ -1,4 +1,4 @@
-const Routes = require("./staticroute");
+
 
 
 const constructorMethod = app => {
