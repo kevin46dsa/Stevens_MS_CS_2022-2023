@@ -5,11 +5,6 @@ const constructorMethod = app => {
   
   app.use("/", ApiRoutes);
   
-  
-  //app.get("/about", (req, res) => {
-  //  res.sendFile(path.resolve("static/index.html"));
-  //});
-
   app.use("*", (req, res) => {
     res.sendStatus(404);
   });

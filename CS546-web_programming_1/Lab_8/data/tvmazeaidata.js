@@ -2,7 +2,7 @@ const axios = require('axios');
 const dataVal = require("./datavalidation")
 
 // need to make code efficient 
-// need to limit to only 5 elements
+
 // if no data found return error
 async function getShows(string) {
 	if(!string) throw "Input must be provided"
@@ -11,15 +11,12 @@ async function getShows(string) {
 	let { data } = await axios.get(
 		`https://api.tvmaze.com/search/shows?q=${string}`
 	);
-
-	let data5 = []
-	for (i = 0; i<5 ;i++){
-		data5.push(data[i].show)
-	}
-	return data5; // this will be an array of shows found
+	data = data.slice(0,5)
+	return data; // this will be an array of shows found
 }
 
-async function getShowById(id){
+async function getShowById(id){   // add is data is not found
+	
 
 	//add data validation
 	let { data } = await axios.get(

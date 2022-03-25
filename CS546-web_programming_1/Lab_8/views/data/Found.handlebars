@@ -1,19 +1,23 @@
 <h1>{{title}}</h1>
-<h2>{{showSearchedTearm}}</h2> 
+<h2>{{showSearchTerm}}</h2> 
 <section>
-{{#each shows}}
-<ul>  
+{{#if shows}}
+<ul> 
+    {{#each shows}} 
     <li>
-        <a href="/show/{{id}}">{{name}}</a>
+        <a href="/show/{{show.id}}">{{show.name}}</a>
     </li>
+    {{/each}}
 </ul>
-{{/each}}
-</section>
-{{#if hasErrors}}
+{{else}}
 <div> 
-    <p class="show-not-found" >We're sorry, but no results were found for {showSearchTerm}.</p>
-</div> 
+    <p class="show-not-found" >We're sorry, but no results were found for {{showSearchTerm}}.</p>
+</div>
 {{/if}}
 <div>
     <a href="/">Make another search</a>
 </div>
+</section>
+
+
+

@@ -4,18 +4,18 @@
 {{else}}
 <h1>N/A</h1>
 {{/if}}
-{{#if data.image.medium}} //figure this out for broken images
-    <img alt= {{data.name}}src={{data.image.medium}}/>
- {{else}}
-    <img alt= {{data.name}}src={{data.image.medium}}/>
-  {{/if}}  
+
+    <img alt="https://image.shutterstock.com/image-vector/picture-vector-icon-no-image-600w-1350441335.jpg" src={{data.image.medium}}>
+   
     <dl>
+
       <dt>Language</dt>
       {{#if data.language}}
       <dd>{{data.language}}</dd>
       {{else}}
       <dd>N/A</dd>
       {{/if}}
+
       <dt>Genres</dt>
       <dd>
         <ul>
@@ -28,23 +28,27 @@
         {{/if}}
         </ul>
       </dd>
+
     <dt>Average Rating</dt>
     {{#if data.rating.average}}
     <dd>{{data.rating.average}}</dd>
     {{else}}
     <dd>N/A</dd>
     {{/if}}
+
     <dt>Network</dt>
     {{#if data.network.name}}
     <dd>{{data.network.name}}</dd>
     {{else}}
     <dd>N/A</dd>
     {{/if}}
+
     <dt>Summary</dt>
     {{#if data.summary}}
     <dd>{{{data.summary}}}</dd>
     {{else}}
     <dd>N/A</dd>
     {{/if}}
+    
   </dl>
   </article>
