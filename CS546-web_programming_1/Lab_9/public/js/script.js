@@ -3,24 +3,25 @@
 function isPrime(num) {
 
     if (num === 2) {
-      return true;
+      return `${num} is a prime number`;
     } else if (num > 1) {
       for (var i = 2; i < num; i++) {
   
         if (num % i !== 0) {
-          return true;
+          return `${num} is a prime number`;
         } else if (num === i * i) {
-          return false
+          return `${num} is NOT a prime number`;
         } else {
-          return false;
+          return `${num} is NOT a prime number`;
         }
       }
     } else {
-      return false;
+      return `${num} is NOT a prime number`;
     }
   
   }
 
+  
   const primeForm = document.getElementById("prime-form");
   
     if (primeForm) {
@@ -30,10 +31,10 @@ function isPrime(num) {
       const primeNumberElement = document.getElementById("Primenumber");
       
   
-      //const errorContainer = document.getElementById("error-container");
-      //const errorTextElement = errorContainer.getElementsByClassName(
-       // "text-goes-here"
-      //)[0];
+      const errorContainer = document.getElementById("error-container");
+      const errorTextElement = errorContainer.getElementsByClassName(
+        "text-goes-here"
+     )[0];
   
       const resultContainer = document.getElementById("result-container");
       const resultTextElement = resultContainer.getElementsByClassName(
@@ -47,29 +48,49 @@ function isPrime(num) {
   
         try {
           // hide containers by default
-          //errorContainer.classList.add("hidden");
+          errorContainer.classList.add("hidden");
           resultContainer.classList.add("hidden");
   
           // Values come from inputs as strings, no matter what :(
           const primeNumberValue = primeNumberElement.value;
-          //const secondNumberValue = secondNumberElement.value;
-          //const operationValue = operationElement.value;
-  
+          if(primeNumberValue.trim().length === 0) throw "you need to enter a valid input";
           const parsedprimeNumberValue = parseInt(primeNumberValue);
-          //const parsedSecondNumberValue = parseInt(secondNumberValue);
-          //const operation = operationStringToFunction(operationValue);
-  
+      
           const result = isPrime(parsedprimeNumberValue);
-  
-          resultTextElement.textContent = "The result is " + result;
+
+          resultTextElement.textContent = result;
+          resultContainer.classList.remove("hidden");
+
+          var li = document.createElement("li");
+          li.setAttribute("id","attempts");
+		      li.appendChild(document.createTextNode(`${result}`));
+		    
+		      var attempts = document.getElementById("attempts");
+		      attempts.appendChild(li);
+          
+          resultTextElement.textContent = result;
           resultContainer.classList.remove("hidden");
         } catch (e) {
-          //const message = typeof e === "string" ? e : e.message;
-          //errorTextElement.textContent = e;
-          //errorContainer.classList.remove("hidden");
+          const message = typeof e === "string" ? e : e.message;
+          errorTextElement.textContent = e;
+          errorContainer.classList.remove("hidden");
         }
       });
     }
 }) ();
+
+
+
+// to do
+
+//Hidded of result and error
+//set class for result ie for prime and not prime
+//css
+//validate html
+// check if it works without server
+//watch sirs video again 
+//read thru spec again 
+
+
 
  
