@@ -1,0 +1,104 @@
+p {
+    display: block;
+    text-align: center;
+    margin-left: 15%;
+    margin-right: 15%;
+  }
+
+  p.error, p.error-not-found {
+        display: block;
+      color: red;
+      text-align: center;
+      margin-left: 15%;
+    margin-right: 15%;
+  }
+
+ 
+a{
+    color:darkblue;
+    font-weight: 500;
+    
+}
+
+ul {
+    align-self: center;
+}
+
+input[type=text], select {
+    width: 25%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    align-self: center;
+
+  }
+  
+  button[type=submit] {
+    width: 25%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  } 
+
+  h1 {
+      color: black;
+      font-weight: bold;
+      text-align:center;
+      font-family:cursive;
+  }
+
+  h2{
+    text-align:center;
+    font-weight: bold;
+  }
+
+  html {
+      background-color: #ccc;
+  }
+
+  form {
+    text-align: center;
+  }
+
+  label {
+    display: block;
+    text-align: center;
+    line-height: 150%;
+    font:bold;
+    font-weight: 500;
+}
+
+
+
+dl {
+    width: 100%;
+    overflow: hidden;
+    padding: 0;
+    margin: 0
+  }
+  dt {
+    float: left;
+    width: 15%;
+    /* adjust the width; make sure the total of both is 100% */
+    padding-left: 0;
+    
+  }
+  dd {
+    float: left;
+    width: 85%;
+    /* adjust the width; make sure the total of both is 100% */
+    padding: 0;
+    margin: 0
+  }
+
+  img {
+    max-height: 280px;
+    overflow: auto;
+      }
