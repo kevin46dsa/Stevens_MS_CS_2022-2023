@@ -2,47 +2,39 @@
 
 function isPrime(num) {
 
-    if (num === 2) {
-      return `${num} is a prime number`;
-    } else if (num > 1) {
-      for (var i = 2; i < num; i++) {
-  
-        if (num % i !== 0) {
-          return `${num} is a prime number`;
-        } else if (num === i * i) {
-          return `${num} is NOT a prime number`;
-        } else {
-          return `${num} is NOT a prime number`;
-        }
+  if (num===1)
+  {
+    return false;
+  }
+  else if(num === 2)
+  {
+    return true;
+  }else
+  {
+    for(var x = 2; x < num; x++)
+    {
+      if(num % x === 0)
+      {
+        return false;
       }
-    } else {
-      return `${num} is NOT a prime number`;
     }
-  
+    return true;  
+  }
   }
 
-  
   const primeForm = document.getElementById("prime-form");
   
+
     if (primeForm) {
-      // We can store references to our elements; it's better to
-      // store them once rather than re-query the DOM traversal each time
-      // that the event runs.
       const primeNumberElement = document.getElementById("Primenumber");
       
-  
       const errorContainer = document.getElementById("error-container");
-      const errorTextElement = errorContainer.getElementsByClassName(
-        "text-goes-here"
-     )[0];
+      const errorTextElement = errorContainer.getElementsByClassName("text-goes-here")[0];
   
       const resultContainer = document.getElementById("result-container");
-      const resultTextElement = resultContainer.getElementsByClassName(
-        "text-goes-here"
-      )[0];
+      const resultTextElement = resultContainer.getElementsByClassName("text-goes-here")[0];
   
-      // We can take advantage of functional scoping; our event listener has access to its outer functional scope
-      // This means that these variables are accessible in our callback
+      
       primeForm.addEventListener("submit", event => {
         event.preventDefault();
   
@@ -62,8 +54,8 @@ function isPrime(num) {
           resultContainer.classList.remove("hidden");
 
           var li = document.createElement("li");
-          li.setAttribute("id","attempts");
-		      li.appendChild(document.createTextNode(`${result}`));
+          li.setAttribute("class", result ? "is-prime" : "not-prime");
+		      li.appendChild(document.createTextNode(result ? `${primeNumberValue} is a Prime Number` : `${primeNumberValue} is NOT a Prime Number`));
 		    
 		      var attempts = document.getElementById("attempts");
 		      attempts.appendChild(li);
@@ -71,7 +63,7 @@ function isPrime(num) {
           resultTextElement.textContent = result;
           resultContainer.classList.remove("hidden");
         } catch (e) {
-          const message = typeof e === "string" ? e : e.message;
+          const message = typeof e === "string" ? e : e.message;  //used code from Code Base
           errorTextElement.textContent = e;
           errorContainer.classList.remove("hidden");
         }
@@ -82,15 +74,13 @@ function isPrime(num) {
 
 
 // to do
-
+//input checking
 //Hidded of result and error
-//set class for result ie for prime and not prime
 //css
 //validate html
-// check if it works without server
 //watch sirs video again 
 //read thru spec again 
 //attention to detail
 
-
+// ask doubt when i click enter the text still stays on the text box but its considred as a entry
  

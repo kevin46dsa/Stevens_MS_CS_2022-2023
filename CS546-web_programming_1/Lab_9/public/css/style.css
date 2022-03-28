@@ -1,0 +1,51 @@
+li.is-prime {
+    color: #00e676
+}
+
+li.not-prime {
+    color: #ff3d00
+}
+
+button[type=submit] {
+    
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  } 
+
+html {
+    background-color: whitesmoke;
+}
+
+h1 {
+    color: black;
+    font-weight: bold;
+    text-align:center;
+    font-family:cursive;
+}
+
+body {
+    text-align: center;
+}
+form {
+    display: inline-block;
+}
+
+.footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: grey;
+        color: black;
+        text-align: center;
+}
+
+p.footer{
+    font-weight: bold;
+}
+
