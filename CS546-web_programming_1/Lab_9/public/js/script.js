@@ -90,7 +90,7 @@ function isPrime(num) {
 // check if it works without server
 //watch sirs video again 
 //read thru spec again 
-
+//attention to detail
 
 
  
