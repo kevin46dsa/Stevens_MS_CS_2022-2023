@@ -3,7 +3,12 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    
+    {{#if title}}
     <title>{{{title}}}</title>
+    {{else}}
+    <title>N/A</title>
+    {{/if}}
     <link rel="stylesheet" href="/public/main_styles.css">
 </head>
 <body>

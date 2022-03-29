@@ -15,7 +15,7 @@ router
 		}
 	});
 
-router.route('/searchshows').post(async (req,res) => {  // need to do error handeling 
+router.route('/searchshows').post(async (req,res) => {  
 	try {
 		if(!req.body) throw "Input needs to be submitted"
 		let Searchreq = req.body; 
@@ -32,7 +32,6 @@ router.route('/searchshows').post(async (req,res) => {  // need to do error hand
 router.route('/show/:id').get(async (req,res) => { // need to do error handeling test alt image
 	try{
 	if(!req.params.id)	throw "Must Provide Show ID"
-	req.params.id = Number(req.params.id)
 	dataVal.checkNumber(req.params.id) 
 	const data = await getdata.getShowById(req.params.id);
 	res.render('data/show', {data: data, title: data.name})
@@ -44,3 +43,8 @@ router.route('/show/:id').get(async (req,res) => { // need to do error handeling
 
 
 module.exports = router;
+
+
+// to do 
+
+// not sure if i have to put h1 tag inside the article in route "/"

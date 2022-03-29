@@ -1,11 +1,12 @@
 <h1>{{title}}</h1>
-<h2>"{{showSearchTerm}}"</h2> 
+<h2>"{{showSearchTerm}}"</h2> <!-- used the Quote marks intentionally because it looks better  -->
+
 <section>
 {{#if shows}}
 <ul> 
     {{#each shows}} 
     <li>
-        <a href="/show/{{show.id}}">{{show.name}}</a>
+        <a class="one" href="/show/{{show.id}}">{{show.name}}</a>
     </li>
     {{/each}}
 </ul>
@@ -15,7 +16,7 @@
 </div>
 {{/if}}
 <div>
-    <a href="/">Make another search</a>
+    <a class="two" href="/">Make another search</a>
 </div>
 </section>
 

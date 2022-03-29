@@ -14,15 +14,32 @@ p {
   }
 
  
-a{
-    color:darkblue;
-    font-weight: 500;
-    
+a.one:link{
+  color:#000000;
+}
+
+a.one:hover {
+  font-size:120%;
+  color: #a8dd16;
+}
+
+a.two {
+  text-align: right;
+  color: rgb(0, 58, 165);
+  text-decoration: dotted;
+}
+a.two:hover {
+  font-size:120%;
+  color: rgb(35, 110, 248);
 }
 
 ul {
-    align-self: center;
+    text-align: center;
+    list-style: none;
 }
+
+
+
 
 input[type=text], select {
     width: 25%;
@@ -86,14 +103,12 @@ dl {
   dt {
     float: left;
     width: 15%;
-    /* adjust the width; make sure the total of both is 100% */
     padding-left: 0;
     
   }
   dd {
     float: left;
     width: 85%;
-    /* adjust the width; make sure the total of both is 100% */
     padding: 0;
     margin: 0
   }
