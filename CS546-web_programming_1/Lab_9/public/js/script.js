@@ -74,11 +74,10 @@ function isPrime(num) {
 
 
 // to do
-//input checking
 //Hidded of result and error
 //css
 //validate html
-//watch sirs video again 
+
 //read thru spec again 
 //attention to detail
 
