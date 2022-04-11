@@ -1,8 +1,10 @@
 (function() {
 
 function isPrime(num) {
-
-  if (num===1)
+  if (num === 0){
+    return false;
+  }
+  else if (num===1)
   {
     return false;
   }
@@ -22,6 +24,13 @@ function isPrime(num) {
   }
   }
 
+  function isValid(num){
+    if(!num) throw "Please enter a number"
+    if(num.trim().length === 0) throw "you need to enter a valid input";
+    let numSplit = num.split('');
+    if(numSplit[0] === "-") throw `${num} Should be a Positive Number `
+  }
+
   const primeForm = document.getElementById("prime-form");
   
 
@@ -29,29 +38,36 @@ function isPrime(num) {
       const primeNumberElement = document.getElementById("Primenumber");
       
       const errorContainer = document.getElementById("error-container");
-      const errorTextElement = errorContainer.getElementsByClassName("text-goes-here")[0];
+      
   
       const resultContainer = document.getElementById("result-container");
-      const resultTextElement = resultContainer.getElementsByClassName("text-goes-here")[0];
+      
   
       
       primeForm.addEventListener("submit", event => {
         event.preventDefault();
   
         try {
+
+          
           // hide containers by default
-          errorContainer.classList.add("hidden");
-          resultContainer.classList.add("hidden");
+          errorContainer.hidden = true
+          
+          resultContainer.hidden = true
+          
   
           // Values come from inputs as strings, no matter what :(
           const primeNumberValue = primeNumberElement.value;
-          if(primeNumberValue.trim().length === 0) throw "you need to enter a valid input";
+          
+          isValid(primeNumberValue);
+
           const parsedprimeNumberValue = parseInt(primeNumberValue);
       
           const result = isPrime(parsedprimeNumberValue);
 
-          resultTextElement.textContent = result;
-          resultContainer.classList.remove("hidden");
+          resultContainer.textContent = result.toString().toUpperCase();
+          resultContainer.hidden = false;
+          
 
           var li = document.createElement("li");
           li.setAttribute("class", result ? "is-prime" : "not-prime");
@@ -60,17 +76,16 @@ function isPrime(num) {
 		      var attempts = document.getElementById("attempts");
 		      attempts.appendChild(li);
           
-          resultTextElement.textContent = result;
-          resultContainer.classList.remove("hidden");
+       
         } catch (e) {
           const message = typeof e === "string" ? e : e.message;  //used code from Code Base
-          errorTextElement.textContent = e;
-          errorContainer.classList.remove("hidden");
+          errorContainer.textContent = e;
+          errorContainer.hidden = false;
+          
         }
       });
     }
 }) ();
-
 
 
 // to do

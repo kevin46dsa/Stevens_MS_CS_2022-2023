@@ -6,16 +6,24 @@ li.not-prime {
     color: #ff3d00
 }
 
-button[type=submit] {
+.btn {
+    background-color: white; 
+  color: black; 
+  border: 2px solid #4CAF50;
     
-    background-color: #4CAF50;
-    color: white;
+    
     padding: 14px 20px;
     margin: 8px 0;
-    border: none;
+    
     border-radius: 4px;
     cursor: pointer;
   } 
+
+  .btn:hover {
+    background-color: #4CAF50;
+    color: white;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+  }
 
 html {
     background-color: whitesmoke;
@@ -25,7 +33,7 @@ h1 {
     color: black;
     font-weight: bold;
     text-align:center;
-    font-family:cursive;
+    font-family:'Times New Roman', Times, serif;
 }
 
 body {
@@ -35,17 +43,36 @@ form {
     display: inline-block;
 }
 
-.footer {
-        position: fixed;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        background-color: grey;
-        color: black;
-        text-align: center;
+.footer { /*https://www.digitalocean.com/community/tutorials/how-to-create-a-static-footer-with-html-and-css-section-7*/
+    
+    position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  height: 90px;
+  background-color: #d0eeed;
 }
 
 p.footer{
     font-weight: bold;
+    display:inline;
 }
 
+.footer-text-left {
+    font-size:18px;
+    padding-left:40px;
+    float:left;
+    
+  }
+
+  #error-container{
+    color: #ff3d00;
+    font-size:18px;
+  }
+
+  #result-container{
+    font-style: oblique;
+    font-weight: bold;
+    font-size:22px;
+    text-shadow: 2px 2px 8px #c5e302
+  }

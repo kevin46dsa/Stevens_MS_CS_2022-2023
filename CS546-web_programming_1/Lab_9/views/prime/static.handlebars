@@ -1,8 +1,7 @@
 <form id="prime-form" method="post" >
-        <div class="prime-group hidden" id="error-container">
-        <div class="alert alert-danger text-goes-here">
-         </div> 
-         </div>  
+        
+         <div class="hidden" id="error-container"></div> 
+         
         <div class="prime-group">
           <label for="Primenumber">Enter a number</label>
           <input type="number" class="form-control" id="Primenumber" name="Primenumber" placeholder="Enter Here..." required >
@@ -11,13 +10,15 @@
         <div class="prime-group">
           <button type="submit" class="btn">Submit</button>
         </div>
-        <div class="prime-group hidden" id="result-container">
-        <div class="alert alert-success text-goes-here">
-         </div> 
-         </div> 
-         <div class="prime-group">
+       
+         <div class="hidden" id="result-container"></div> 
+      
+         <div class="prime-attempts">
            <ul id="attempts">
           </ul>
-        </div>
-          
+        </div>  
+        <input name= '_method' value="PUT" hidden/>   
   </form>
+  
+  
+  
