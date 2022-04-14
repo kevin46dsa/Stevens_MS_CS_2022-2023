@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "Launch Anagrams",
+            "request": "launch",
+            "mainClass": "Anagrams",
+            "projectName": "Stevens_MS_CS_2022-2023_20f535f1"
+        },
+        {
             "type": "pwa-node",
             "request": "launch",
             "name": "Launch Program",
