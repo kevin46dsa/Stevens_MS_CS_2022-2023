@@ -1,0 +1,18 @@
+{{#if restrictedAccess}}
+<div class="Error">
+  <h1>STOP !!!</h1>
+  <h3>You are not a Authorised user to Access this page</h3>
+  <h3> Please Login </h3>
+  <a href="/">Want to Login ? Click Here</a>
+</div>
+{{/if}}
+{{#if error}}
+<div class="Error">
+  <p>
+    {{error}}
+  </p>
+</div>
+<div>
+  <a href="/" >Want to Login ? Click Here</a>
+</div>
+{{/if}}
