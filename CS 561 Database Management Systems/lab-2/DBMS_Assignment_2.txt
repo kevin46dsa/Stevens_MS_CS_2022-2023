@@ -1,0 +1,175 @@
+/-----------------------------------------\
+Q1:For each customer, product and month, count the number of sales transactions that were between the previous and the following month's average sales quantities. For January and December, display <NULL> or 0.
+~~~~~~~~~
+Query 1 Ans:
+
+with 
+a as (
+SELECT cust, prod, month, ROUND(Avg(quant)) as avg1
+FROM sales s
+GROUP BY 1,2,3
+ORDER BY 1,2,3
+),
+B as (
+SELECT inst1.cust, inst1.prod, inst1.month, inst2.avg1 AS nextMonth
+from a inst1, a inst2
+where inst1.cust = inst2.cust AND inst1.prod = inst2.prod AND inst1.month = inst2.month-1  
+),
+C As (
+SELECT inst1.cust, inst1.prod, inst1.month, inst2.avg1 AS prevMonth
+from a inst1, a inst2
+where inst1.cust = inst2.cust AND inst1.prod = inst2.prod AND inst1.month = inst2.month+1  
+),
+
+D AS (
+SELECT a.cust,a.prod,a.month,a.avg1,B.nextMonth,C.prevMonth
+  from a NATURAL FULL JOIN B NATURAL FULL Join C
+)
+
+
+// need to fix this part
+
+SELECT s.cust AS "CUSTOMER", s.prod AS "PRODUCT", s.month AS "MONTH", count(quant) AS "SALES_COUNT_BETWEEN_AVGS"
+FROM D , sales s
+WHERE s.quant >= prevMonth AND s.quant <= nextMonth
+GROUP BY 1,2,3
+ORDER BY 1,2,3;
+~~~~~~~~~~
+Query 1 from git: need to Edit
+
+SELECT prod, month, Avg(quant) as avg1
+Into Qy1
+FROM sales s
+GROUP BY prod, month
+ORDER BY prod, month;
+
+SELECT * FROM Qy1;
+
+SELECT v1.prod, v1.month, v2.avg1 AS next
+into Qy2
+FROM Qy1 v1, Qy1 v2
+WHERE v1.prod = v2.prod AND v1.month = v2.month-1
+GROUP BY v1.prod, v1.month, v2.avg1
+ORDER BY prod, month;
+
+SELECT v1.prod, v1.month, v2.avg1 AS prev
+into Qy3
+FROM Qy1 v1, Qy1 v2
+WHERE v1.prod = v2.prod AND v1.month = v2.month+1
+GROUP BY v1.prod, v1.month, v2.avg1
+ORDER BY prod, month;
+
+SELECT * FROM Qy2;
+
+SELECT Qy1.prod, Qy1.month, avg1, prev, next 
+into Qy4
+FROM Qy1 NATURAL FULL JOIN Qy2 NATURAL FULL JOIN Qy3;
+
+SELECT * FROM Qy4;
+
+SELECT s.prod AS "PRODUCT", s.month AS "MONTH", count(quant) AS "SALES_COUNT_BETWEEN_AVGS"
+FROM Qy4, sales s
+WHERE s.quant >= prev AND s.quant <= next
+GROUP BY s.prod, s.month
+ORDER BY s.prod, s.month;
+
+/---------------------------------------------\
+
+Query 2: Need to Make it mine
+
+WITH tbl_original AS
+(
+	SELECT cust, prod, month, round(avg(quant),0) AS AVG
+	FROM sales
+	GROUP BY cust, prod, month
+
+), tbl_before AS 
+(
+	SELECT t1.cust, t1.prod, t2.month, t1.AVG AS BEFORE_MONTH
+	FROM tbl_original t1, tbl_original t2
+	WHERE t1.cust = t2.cust AND t1.prod = t2.prod AND t1.month = t2.month-1
+	
+), tbl_during AS 
+(
+	SELECT t1.cust, t1.prod, t2.month, t1.AVG AS DURING_MONTH
+	FROM tbl_original t1, tbl_original t2
+	WHERE t1.cust = t2.cust AND t1.prod = t2.prod AND t1.month = t2.month
+	
+), 
+tbl_after AS 
+(
+	SELECT t1.cust, t1.prod, t2.month, t1.AVG AS AFTER_MONTH
+	FROM tbl_original t1, tbl_original t2
+	WHERE t1.cust = t2.cust AND t1.prod = t2.prod AND t1.month = t2.month+1
+
+), before_result AS 
+(
+	SELECT O.cust, O.prod, O.month, BEFORE_MONTH
+	FROM tbl_original O LEFT JOIN tbl_before B
+	ON O.cust = B.cust AND O.prod = B.prod AND O.month = B.month
+), during_result AS 
+(
+	SELECT O.cust, O.prod, O.month, DURING_MONTH
+	FROM tbl_original O LEFT JOIN tbl_during D
+	ON O.cust = D.cust AND O.prod = D.prod AND O.month = D.month
+), after_result AS 
+(
+	SELECT O.cust, O.prod, O.month, AFTER_MONTH
+	FROM tbl_original O LEFT JOIN tbl_after A
+	ON O.cust = A.cust AND O.prod = A.prod AND O.month = A.month
+)
+SELECT B.cust AS "CUSTOMER", B.prod AS "PRODUCT", B.month AS "MONTH", BEFORE_MONTH AS "BEFORE_MONTH", DURING_MONTH AS "DURING_MONTH", AFTER_MONTH AS "AFTER_MONTH"
+FROM before_result B, after_result A, during_result D
+WHERE B.cust = A.cust AND B.prod = A.prod AND B.month = A.month
+AND B.cust = D.cust AND B.prod = D.prod AND B.month = D.MONTH
+
+/---------------------------------------------\
+Query 3: Need to Edit
+
+WITH tbl_avg_cust AS 
+(
+	SELECT cust, prod, state, count(quant) AS C1, sum(quant) AS S1, round(avg(quant),0) AS CUST_AVG
+	FROM sales
+	GROUP BY cust, prod, state
+	
+), tbl_other_state AS
+(
+	SELECT cust, prod, count(quant) AS C2, sum(quant) AS S2
+	FROM sales
+	GROUP BY cust, prod
+		
+), tbl_other_product AS
+(
+	SELECT cust, state, count(quant) AS C3, sum(quant) AS S3, round(avg(quant),0) AS PROD_AVG
+	FROM sales
+	GROUP BY cust, state
+)
+SELECT t1.cust AS "CUSTOMER", t1.prod AS "PRODUCT", t1.state AS "STATE", PROD_AVG AS "PROD_AVG", (S3-S1)/(C3-C1) AS "OTHER_CUST_AVG", (S3-S1)/(C3-C1) AS "OTHER_PROD_AVG"
+FROM tbl_avg_cust t1, tbl_other_state t2, tbl_other_product t3
+WHERE t1.cust = t2.cust AND t1.prod = t2.prod AND t1.cust = t3.cust AND t1.state = t3.state
+
+
+
+
+
+/---------------------------------------------\
+Query 5: Need to Make it mine
+
+WITH original_sales AS
+(	SELECT cust,prod,month, sum(quant)As MONTH_SALES
+	FROM sales
+	GROUP BY cust,prod,month
+), total_sales AS
+(SELECT t1.cust, t1.prod, t1.month, sum(t2.MONTH_SALES) AS COMBINED_SALES
+ FROM original_sales t1, original_sales t2
+ WHERE t1.cust = t2.cust AND t1.prod = t2.prod AND t1.month = t2.month
+ GROUP BY t1.cust, t1.prod, t1.month
+ ), target_sales AS
+ (	SELECT cust, prod, ROUND(SUM(MONTH_SALES)/3,0)As Targeted_sales
+ 	FROM original_sales
+ 	GROUP BY cust, prod
+ )
+SELECT t1.cust As "CUSTOMER", t1.prod AS "PRODUCT", min(t1.month) AS "1/3 PURCHASED BY MONTH" 
+FROM total_sales t1, target_sales t2
+where t1.cust = t2.cust AND t1.prod = t2.prod 
+GROUP BY t1.cust, t1.prod
