@@ -35,7 +35,7 @@ WHERE s.quant >= prevMonth AND s.quant <= nextMonth
 GROUP BY 1,2,3
 ORDER BY 1,2,3;
 ~~~~~~~~~~
-Query 1 from git: need to Edit
+Query 1 from git: refrence
 
 SELECT prod, month, Avg(quant) as avg1
 Into Qy1
