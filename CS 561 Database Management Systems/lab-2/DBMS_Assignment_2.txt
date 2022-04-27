@@ -73,6 +73,36 @@ WHERE s.quant >= prev AND s.quant <= next
 GROUP BY s.prod, s.month
 ORDER BY s.prod, s.month;
 
+
+query 1 solved by bhaiya:
+with 
+Cte1 as( 
+  Select cust as customer, prod as product, month, avg(quant) as avgquant 
+  from sales
+  group BY 1,2,3
+  ),
+  month_cte as (select distinct cust, prod, month from sales),
+--select * from Cte1
+cte2 as (
+Select s.cust, s.prod, s.month, COALESCE(sum(s.quant), 0) as total_sales
+From Cte1 c1 right join sales s on (c1.customer = s.cust and c1.product = s.prod and c1.month = s.month)
+Where s.quant 
+between (select avgquant from Cte1 where month = s.month-1 and customer = s.cust and product = s.prod) 
+and (select avgquant from Cte1 where month = s.month+1 and customer = s.cust and product = s.prod)
+--and s.cust = 'Mia' and s.prod = 'Jellies' --and s.month = 3
+group by 1 , 2, 3
+order by 3)
+
+select m1.cust, m1.prod,m1.month,COALESCE(c2.total_sales, 0) as total_sales from month_cte m1 
+left join cte2 c2 on (m1.month = c2.month and m1.cust = c2.cust and m1.prod = c2.prod)
+--where m1.cust = 'Mia' and m1.prod = 'Jellies'
+order by 1,2,3
+------------**********end of query*******************************
+select * from sales s where s.cust = 'Mia' and s.prod = 'Jellies' and month = 4 --and quant between 478.54 and 550.36
+
+select cust, prod, month, avg(quant) as avg_q from sales where cust = 'Mia' and prod = 'Jellies' and month = 3 group by 1,2,3 ;
+select cust, prod, month, avg(quant) as avg_q from sales where cust = 'Mia' and prod = 'Jellies' and month = 5 group by 1,2,3 ;
+
 /---------------------------------------------\
 
 Query 2: DONE   
@@ -157,8 +187,49 @@ FROM tbl_avg_cust t1, tbl_other_state t2, tbl_other_product t3
 WHERE t1.cust = t2.cust AND t1.prod = t2.prod AND t1.cust = t3.cust AND t1.state = t3.state
 
 
+Compiled using Github as refrence:
 
+with 
+Temp1 AS(
+select cust,prod,state,round(avg(quant)) as cust_avg from sales group by cust,prod,state order by cust
+),
+ cte4 as(
+  select Temp1.cust,Temp1.prod,Temp1.state,round(avg(quant)) as other_state_avg 
+   from Temp1,sales 
+ where Temp1.prod = sales.prod and Temp1.cust = sales.cust and Temp1.state != sales.state
+group by Temp1.cust,Temp1.prod,Temp1.state 
+   order by Temp1.cust),
+  cte3 AS
+(select Temp1.cust,Temp1.prod,Temp1.state,round(avg(quant)) as other_prod_avg 
+ from Temp1,sales 
+ where Temp1.prod != sales.prod and Temp1.cust = sales.cust and Temp1.state = sales.state
+group by Temp1.cust,Temp1.prod,Temp1.state order by Temp1.cust),
+cte2 AS
+(select Temp1.cust,Temp1.prod,Temp1.state,round(avg(quant)) as other_cust_avg
+ from Temp1,sales 
+ where Temp1.prod = sales.prod and Temp1.cust != sales.cust and Temp1.state = sales.state
+group by Temp1.cust,Temp1.prod,Temp1.state order by Temp1.cust)
 
+select * from(Temp1 natural full outer join cte2 natural full outer join cte3 natural full outer join cte4)
+order by cust,prod
+
+/---------------------------------------------\
+Query 4: solved by bhaiya
+
+with cte1 as (
+  select distinct cust, state from sales where state = 'NJ'
+)
+------start
+select DISTINCT s1.cust, s1.quant, s1.prod, s1.date
+from sales s1
+where s1.quant in (SELECT distinct quant from sales where cust = s1.cust 
+                   and state = 'NJ' order by quant desc limit 3)
+--and s1.cust = 'Mia'
+and s1.state = 'NJ'
+order by 1, 2 desc
+
+----- end
+select * from sales where cust = 'Chae' and state = 'NJ' order by quant desc
 
 /---------------------------------------------\
 Query 5: DONE
