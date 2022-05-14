@@ -1,0 +1,188 @@
+--Kevin Christie dsa
+--CWID: 20009000
+~~~~~~~~~~
+Query 1:
+
+with 
+cte1 as(
+SELECT cust ,prod, month, Avg(quant) as avg1
+FROM sales 
+GROUP BY 1,2,3
+ORDER BY 1,2,3
+),
+cte2 as(
+SELECT c1.cust, c1.prod, c1.month, c2.avg1 AS next
+FROM cte1 c1, cte1 c2
+WHERE c1.cust = c2.cust and c1.prod = c2.prod AND c1.month = c2.month-1
+GROUP BY 1,2,3,4
+ORDER BY 1,2,3
+),
+cte3 as (
+SELECT c1.cust,c1.prod, c1.month, c2.avg1 AS prev
+FROM cte1 c1, cte1 c2
+WHERE c1.cust = c2.cust and c1.prod = c2.prod AND c1.month = c2.month+1
+GROUP BY 1,2,3,4
+ORDER BY 1,2,3
+),
+cte4 as(
+SELECT cte1.cust, cte1.prod, cte1.month, avg1, prev, next 
+FROM cte1 NATURAL FULL JOIN cte2 NATURAL FULL JOIN cte3
+),
+month_cte as (
+  select distinct cust, prod, month, quant
+  from sales
+),
+cte5 as(
+
+SELECT s.cust ,s.prod , s.month, quant AS total_sales
+FROM cte4 c1, sales s
+WHERE s.quant >= prev AND s.quant <= next and s.cust = c1.cust and s.prod = c1.prod and s.month = c1.month
+
+),
+cte6 as(
+select DISTINCT m1.cust, m1.prod ,m1.month,c2.total_sales 
+from month_cte m1 
+left join cte5 c2 on (m1.month = c2.month and m1.cust = c2.cust and m1.prod = c2.prod)
+order by 1,2,3
+)
+
+select cust as "CUSTOMER", prod as "PRODUCT",month as "MONTH",COUNT(total_sales)
+from cte6 
+GROUP by 1,2,3
+order by 1,2,3;
+  
+/---------------------------------------------\
+
+Query 2: DONE   
+
+WITH 
+Cte1 AS
+(
+    SELECT cust, prod, month, round(avg(quant)) AS AVG
+	FROM sales
+	GROUP BY 1,2,3
+  	order by 1,2,3
+), 
+
+beforemonth AS 
+(
+	SELECT C1.cust, C1.prod, C2.month, C1.AVG AS BEFORE_AVG
+	FROM Cte1 C1, Cte1 C2
+	WHERE C1.cust = C2.cust AND C1.prod = C2.prod AND C1.month = C2.month-1
+	
+), 
+aftermonth AS 
+(
+	SELECT C1.cust, C1.prod, C2.month, C1.AVG AS AFTER_AVG
+	FROM Cte1 C1, Cte1 C2
+	WHERE C1.cust = C2.cust AND C1.prod = C2.prod AND C1.month = C2.month+1
+	
+), 
+originalmonth AS 
+(
+	SELECT C1.cust, C1.prod, C2.month, C1.AVG AS DURING_AVG
+	FROM Cte1 C1, Cte1 C2
+	WHERE C1.cust = C2.cust AND C1.prod = C2.prod AND C1.month = C2.month
+
+), 
+before_merge AS 
+(
+	SELECT C1.cust, C1.prod, C1.month, BEFORE_AVG
+	FROM Cte1 C1 LEFT JOIN beforemonth C2
+	ON C1.cust = C2.cust AND C1.prod = C2.prod AND C1.month = C2.month
+), 
+
+after_merge AS 
+(
+	SELECT C1.cust, C1.prod, C1.month, AFTER_AVG
+	FROM Cte1 C1 LEFT JOIN aftermonth C4
+	ON C1.cust = C4.cust AND C1.prod = C4.prod AND C1.month = C4.month
+),
+during_merge AS 
+(
+	SELECT C1.cust, C1.prod, C1.month, DURING_AVG
+	FROM Cte1 C1 LEFT JOIN originalmonth C3
+	ON C1.cust = C3.cust AND C1.prod = C3.prod AND C1.month = C3.month
+) 
+SELECT CteBM.cust AS "CUSTOMER", CteBM.prod AS "PRODUCT", CteBM.month AS "MONTH", CteBM.BEFORE_AVG as "BEFORE_AVG", CteDM.DURING_AVG as "DURING_AVG", CteAM.AFTER_AVG as "AFTER_AVG"
+FROM before_merge CteBM, after_merge CteAM, during_merge CteDM
+WHERE CteBM.cust = CteAM.cust AND CteBM.prod = CteAM.prod AND CteBM.month = CteAM.month
+AND CteBM.cust = CteDM.cust AND CteBM.prod = CteDM.prod AND CteBM.month = CteDM.MONTH
+
+/---------------------------------------------\
+Query 3: DONE
+
+with 
+cte1 AS(
+select cust ,prod,state ,round(avg(quant)) as "PROD_AVG" 
+  from sales 
+  group by 1,2,3 
+  order by 1
+),
+ cte4 as(
+  select c1.cust,c1.prod,c1.state,round(avg(quant)) as "OTHER_STATE_AVG" 
+   from cte1 c1,sales s1
+ where c1.prod = s1.prod and c1.cust = s1.cust and c1.state != s1.state
+group by 1,2,3 
+   order by 1
+ ),
+  cte3 AS
+(select c1.cust,c1.prod,c1.state,round(avg(quant)) as "OTHER_PROD_AVG" 
+   from cte1 c1,sales s1
+ where c1.prod != s1.prod and c1.cust = s1.cust and c1.state = s1.state
+group by 1,2,3 
+   order by 1),
+cte2 AS
+(select c1.cust,c1.prod,c1.state,round(avg(quant)) as "OTHER_CUST_AVG" 
+   from cte1 c1,sales s1
+ where c1.prod = s1.prod and c1.cust != s1.cust and c1.state = s1.state
+group by 1,2,3 
+   order by 1)
+
+select * 
+from(cte1 natural full outer join cte2 natural full outer join cte3 natural full outer join cte4)
+order by cust,prod
+
+/---------------------------------------------\
+Query 4: DONE
+
+select DISTINCT s1.cust as "CUSTOMER", s1.quant as "QUANTITY", s1.prod as "PRODUCT" , s1.date as "DATE"
+from sales s1
+where s1.quant in (SELECT distinct quant from sales where cust = s1.cust 
+                   and state = 'NJ' order by quant desc limit 3)
+and s1.state = 'NJ'
+order by 1, 2 desc
+
+
+/---------------------------------------------\
+Query 5: DONE
+
+with cte1 as(
+  SELECT cust,prod,month,sum(quant) 
+  FROM sales 
+  GROUP BY 1,2,3
+),
+cte2 as(
+  select cust,prod,sum(quant) as prod_total 
+  from sales 
+  group by 1,2 
+  order by 1,2
+),
+cte3 as(
+  SELECT c1.cust,c1.prod,c1.month,sum(c2.sum) as month_total 
+  FROM cte1 c1 JOIN cte1 c2 ON c1.cust=c2.cust 
+  AND c1.prod=c2.prod
+  AND c1.month>=c2.month 
+  GROUP BY 1,2,3
+  ORDER BY 1,2,3),
+cte4 as(
+  select c1.cust,c1.prod,c1.month as one_third_month
+  from cte3 c1,cte2 c2
+where c1.month_total > (1.0/3.0 * c2.prod_total) and c1.prod = c2.prod and c1.cust = c2.cust
+group by 1,2,3
+order by 1,2)
+
+select cust as CUSTOMER,prod as PRODUCT,min(one_third_month) as "1/3 PURCHASED by month"
+from cte4 
+group by 1,2
+ORDER BY 1,2
