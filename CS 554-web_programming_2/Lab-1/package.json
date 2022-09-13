@@ -11,9 +11,9 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.26.1",
-    "express": "^4.17.3",
     "bcryptjs": "^2.4.3",
+    "express": "^4.17.3",
+    "express-session": "^1.17.3",
     "mongodb": "^4.5.0"
-    
   }
 }

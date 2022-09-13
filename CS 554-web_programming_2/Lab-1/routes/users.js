@@ -1,4 +1,5 @@
 const router = require('express').Router();
+/*
 const jwtkey = require('../config/authconfig');
 const dataFunctions = require('../data/users');
 const dataValidation = require('../data/dataValidation');
@@ -109,9 +110,9 @@ router.get('/', async (req, res) => {
 	Sweets in the DB, then you will return a 404 status code and message 
 	stating there are no more Sweets) Hint: You can use the skip and limit cursors in 
 	MongoDB that we learned about in 546 to make this work. 
-	*/
+	
 })
-
+*/
 router.get('/:id', async (req, res) => {
 	
 })
@@ -135,7 +136,7 @@ router.delete('/:sweetId/:replyId', async (req, res) => {
 router.post('/sweets/:id/likes', async (req, res) => {
 	
 })
-
+/*
 router.post('/signup', async (req, res) => {
 	
 })
@@ -147,6 +148,76 @@ router.post('/login', async (req, res) => {
 router.get('/logout', async (req, res) => {
 	
 })
+*/
+router.post('/signup', async (req,res) =>{
+    try{
+    if(!req.body.username)throw 'Please enter Username';   
+    if(!req.body.password) throw "Please enter Password";
+    var username = req.body.username;
+    var password = req.body.password;
+    // datavalidation for both
+    username = dataVal.checkUsername(username); //check username returns 
+    dataVal.checkPassword(password); //check password doesnot return
+    }
+    catch(e){
+      return res.status(400).render('view/signup', {title: 'Sign up',Error: e});     
+    }
+    //if true
+    try{
+    var insertedBool = await data.createUser(username,password);
+    }
+    catch(e){
+        return res.status(400).render('view/signup', {title: 'Sign up',Error: e}); 
+    }
+    try{
+    if(insertedBool.userInserted === true){
+        res.status(200).redirect("/"); 
+    }
+    else res.status(500).render('view/error',{title:"Error",error:"Internal Server Error"})
+    }
+    catch(e){
+        return res.status(400).render('view/signup', {title: 'Sign up',Error: e}); 
+    }
+    
+})
+
+router.post('/login',async (req, res) => {
+    try{
+    if(!req.body.username)throw 'Please enter Username';   
+    if(!req.body.password) throw "Please enter Password";
+    var username = req.body.username;
+    var password = req.body.password;
+
+    // datavalidation for both
+    username = dataVal.checkUsername(username);
+    dataVal.checkPassword(password);
+    }
+    catch(e) {
+        return res.status(400).render('view/login', {title: 'Login',Error: e});
+    }
+    try{
+    var checkBool = await data.checkUser(username,password);
+    }
+    catch(e){
+        return res.status(400).render('view/login', {title: 'Login',Error: e});
+    }
+    // create cookie
+    if(checkBool.authenticated === true){
+    req.session.user = {'username': username};
+    res.status(200).redirect('/private');
+    }
+ 
+
+});
+
+router.get('/logout', async (req, res) => {
+    if (req.session.user) {
+        req.session.destroy();
+    res.status(200).json({LoggedOut: 'Come Back Soon'});
+    }
+    else res.status(400).json({error:"User Not logged in Please Login"})
+      
+  });
 
 
 
