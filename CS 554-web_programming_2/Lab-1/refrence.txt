@@ -1,0 +1,46 @@
+
+Middle ware 1
+//let method = req.method;
+// let user = req.session.user;
+// let route = req.originalUrl;
+//let user = {_id: "12", username:"kevin46dsa"}
+let user = undefined
+let route = "sweet/login"
+let method = "PUT"
+
+function middleware(User,Method){
+    
+    let flagMethods = ["POST", "PUT", "PATCH"];
+    
+    if(flagMethods.includes(Method)){
+        if(User){
+            if(Method !== "POST"){
+                console.log("Data Function to check if user is the one who posted the sweet")
+                console.log("next")
+            }
+            else console.log('next')
+        }
+        else console.log("Error Code 400 : User not logged in");
+        
+    }
+    
+
+   console.log('next')
+} 
+
+middleware(user,method)
+Middle ware 2
+
+
+
+
+
+
+
+        
+        
+
+
+
+
+
