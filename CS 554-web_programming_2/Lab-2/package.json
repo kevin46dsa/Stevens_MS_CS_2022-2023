@@ -1,0 +1,26 @@
+{
+  "name": "lab2",
+  "version": "1.0.0",
+  "description": "CS554-WebProgramming2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevin46dsa/lab2.git"
+  },
+  "author": "Kevin Christie Dsa 20009000",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kevin46dsa/lab2/issues"
+  },
+  "homepage": "https://github.com/kevin46dsa/lab2#readme",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "blueimp-md5": "^2.19.0",
+    "express": "^4.18.1",
+    "redis": "^4.3.1"
+  }
+}
