@@ -1,0 +1,64 @@
+```{r}
+# Name : Kevin Dsa
+# CWID : 20009000
+# HW   : HW_08_Cluster
+
+#Hclust
+rm(list=ls())
+# Loading CSV 
+
+Data <- read.csv('/Users/kevindsa/Documents/wisc_bc_ContinuousVar.csv',header=TRUE, sep=",")
+head(Data, n=10)
+summary(Data)
+
+# Removing the first column since it is ID
+Data = Data[,-1]
+head(Data, n=10)
+
+
+# Removing any NA values
+Data<-na.omit(Data)
+summary(Data)
+
+#Removing the diagnosis column 
+Diagnosis<-dist(Data[,-1])
+
+# tabulating the clustered rows against the "diagnosis" column
+final<-hclust(Diagnosis)
+plot(final)
+
+#Cuts a tree, e.g., as resulting from hclust, into several groups either by specifying the desired number(s) of groups or the cut height(s).
+cutData<-cutree(final,2)
+table(cutData,Data[,1])
+
+rm(list=ls())
+
+
+
+# KNN
+
+# Loading CSV 
+
+Data <- read.csv('/Users/kevindsa/Documents/wisc_bc_ContinuousVar.csv',header=TRUE, sep=",")
+head(Data, n=10)
+summary(Data)
+
+# Removing the first column since it is ID
+Data = Data[,-1]
+head(Data, n=10)
+
+
+# Removing any NA values
+Data<-na.omit(Data)
+summary(Data)
+
+tempdata = Data[,-1]
+
+
+#running the model
+kmodel<- kmeans(tempdata,2,nstart = 10)
+
+#Tabulate the clustered rows against the “diagnosis” column.
+table(kmodel$cluster,Data[,1])
+```
+

@@ -1,0 +1,55 @@
+# Name : Kevin Dsa
+# CWID : 20009000
+# HW   : Lab5_Dtrees
+
+rm(list=ls())
+
+library(class)
+library(rpart)             # CART standard package
+library(rattle)           # Fancy tree plot
+
+#csvFile <-file.choose()
+#Data <- read.csv(csvFile)
+# Loading CSV 
+Data <- read.csv('/Users/kevindsa/Documents/breast-cancer-wisconsin.csv',header=TRUE, sep=",")
+head(Data, n=10)
+summary(Data)
+
+Data[Data == '?'] <- NA
+# Summary of F6 is missing as it has non numeric character
+Data$F6 <- as.integer(Data$F6)
+summary(Data)
+
+Data<-na.omit(Data)
+summary(Data)
+
+Data$Class <- factor(Data$Class, levels = c(2, 4), labels = c("benign", "malignant"))
+Data<- Data[2:11]
+
+#setting Class
+class(Data$Class)
+
+head(Data, n=10)
+
+#Splitting Dataset into Training and test
+index <- sample(nrow(Data),as.integer(.70*nrow(Data)))
+train_data<-Data[index,]
+test_data<-Data[-index,]
+
+?rpart()
+CART_class <- rpart(Class~., data = train_data)
+
+# ?predict()
+prediction <- predict(CART_class, test_data, type = "class")
+
+#generating matrix
+conf_matrix <- table(prediction,test_data$Class)
+print(conf_matrix)
+
+#calculating accuracy
+accuracy <- function(x){sum(diag(x)/(sum(rowSums(x)))) * 100}
+accuracy(conf_matrix)
+
+#Fancy tree plot
+fancyRpartPlot(CART_class)
+rm(list=ls())

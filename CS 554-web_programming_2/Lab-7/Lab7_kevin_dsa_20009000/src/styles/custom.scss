@@ -1,0 +1,60 @@
+@import "variables";
+@import "./bootstrap-4.0.0/scss/bootstrap";
+
+body,
+html {
+    background: $body-background;
+    color: darken($brightPurple, 20%);
+    background-clip: border-box;
+}
+
+p {
+    font-size: $secondary-font-size;
+}
+
+.btn-primary{
+    background-color: $button-primary-color
+}
+
+@mixin border-bottom($size) {
+    border-bottom: $size solid #000;
+}
+
+* {
+    box-sizing: border-box;
+}
+h1 { 
+    color: $heading-font-color;
+    font-family: $heading-font;
+}
+h2{
+    font-size: $primary-font-size + 2pt;
+    font-family: $heading-font;
+}
+
+
+.card-container {
+    padding-bottom: 20px;
+    
+}
+
+.nav-list {
+    font-size: 20px;
+    
+    a {
+      color: black;
+      font-family:$font-basic;
+    }
+  }
+
+.prod-img {
+    height: 30vh;
+    object-fit: contain;
+}
+.modal-img {
+    height: 38vh;
+    object-fit: contain;
+}
+
+
+
